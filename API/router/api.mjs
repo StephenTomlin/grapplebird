@@ -1,3 +1,5 @@
-export default class api {
-    static basicAPICall(req, res, next);
+export default class {
+    static basicAPICall(req, res, next) {
+        console.log("WE DID IT")
+    }
 }

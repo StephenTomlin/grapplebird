@@ -4,15 +4,11 @@ import http from 'http';
 import OS from 'os';
 import express from 'express';
 
-const router = express.Router();
-
 // TODO: MAKE THIS READ FROM DOTENV, DOTENV WILL READ FROM CERT.
-const credentials = {
-    key: 'privatekey', 
-    cert: 'privatecert' 
-}
-
-const app = express();
+const app       = express();
+const router    = express.Router();
+const PORT      = process.env.PORT || 8080;
+const creds     = { key: 'privatekey', cert: 'privatecert' };
 
 // if cluster is master
 if (cluster.isMaster) {
@@ -33,7 +29,7 @@ if (cluster.isMaster) {
     //TODO CHANGE TO HTTPS
     app.server = http
         .createServer(app)
-        .listen(8080);
+        .listen(PORT);
     
 }
 

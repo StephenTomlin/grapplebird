@@ -15,7 +15,7 @@
     "react-scripts": "3.4.1"
   },
   "scripts": {
-    "start": "node -r dotenv/config --experimental-modules ./API/server.mjs",
+    "start": "echo Process running on port 8080 && node -r dotenv/config --experimental-modules ./API/main.mjs",
     "build": "webpack --mode production"
   },
   "eslintConfig": {

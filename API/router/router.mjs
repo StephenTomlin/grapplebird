@@ -2,5 +2,6 @@
 import { router } from '../server.mjs';
 import api from './api.mjs';
 
-
 router.get('/', api.basicAPICall);
+
+export default router;
