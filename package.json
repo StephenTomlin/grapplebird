@@ -4,18 +4,20 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/register": "^7.9.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "ignore-styles": "^5.0.1",
     "morgan": "^1.10.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1"
   },
   "scripts": {
-    "start": "echo Process running on port 8080 && node -r dotenv/config --experimental-modules ./API/main.mjs",
+    "start": "echo Process running on port 8080 && node -r dotenv/config ./API/index.js",
     "build": "webpack --mode production"
   },
   "eslintConfig": {
@@ -35,6 +37,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/preset-env": "^7.9.6",
     "@babel/preset-react": "^7.9.4",
     "babel-loader": "^8.1.0",

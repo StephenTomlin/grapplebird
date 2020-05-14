@@ -3,6 +3,7 @@ import cluster from 'cluster';
 import http from 'http';
 import OS from 'os';
 import express from 'express';
+import path from 'path';
 
 // TODO: MAKE THIS READ FROM DOTENV, DOTENV WILL READ FROM CERT.
 const app       = express();
@@ -25,7 +26,6 @@ if (cluster.isMaster) {
 } else {
     // Workers can share any tcp connection
     // in this case it is an HTTPS server
-
     //TODO CHANGE TO HTTPS
     app.server = http
         .createServer(app)
@@ -33,4 +33,4 @@ if (cluster.isMaster) {
     
 }
 
-export { app, router };
+export { app, router, express };

@@ -6,8 +6,17 @@ module.exports = {
             {
                 test: /\.(js|jsx)$/,
                 exclude: /node_modules/,
-                use: {
-                    loader: "babel-loader"
+                loader: "babel-loader",
+                options: {
+                    presets: [ 
+                        '@babel/preset-env',
+                        '@babel/react', 
+                        {
+                            "plugins": [
+                                "@babel/plugin-proposal-class-properties",
+                            ]
+                        }
+                    ]
                 }
             },
             {
@@ -31,7 +40,7 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             template: "./public/index.html",
-            filename: "./dist/index.html"
+            filename: "./build/index.html"
         })
     ]
 }

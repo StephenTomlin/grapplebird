@@ -1,6 +1,6 @@
 'use strict';
-import { router } from '../server.mjs';
-import api from './api.mjs';
+import { router } from '../server.js';
+import api from './api.js';
 
 router.get('/', api.basicAPICall);
 
