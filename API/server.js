@@ -20,7 +20,7 @@ if (cluster.isMaster) {
     CPUs.forEach(() => cluster.fork());
 
     cluster.on('exit', (worker, code, signal) => {
-        console.log(`worker ${worker.process.pid} died`);
+        console.log(`worker ${worker.process.pid} died. Forking another worker...`);
         cluster.fork();
     });
 } else {
@@ -30,7 +30,6 @@ if (cluster.isMaster) {
     app.server = http
         .createServer(app)
         .listen(PORT);
-    
 }
 
 export { app, router, express };
