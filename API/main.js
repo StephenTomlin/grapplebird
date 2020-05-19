@@ -15,7 +15,7 @@ export default express()
     .disable('x-powered-by')
 
     //serve static files
-    .use(express.static(path.resolve(__dirname, '..', 'build')))
+    .use(express.static(path.resolve(__dirname, '..', 'dist')))
 
     //use bodyparser //urlencoded extended true
     .use(bodyparser.json())
