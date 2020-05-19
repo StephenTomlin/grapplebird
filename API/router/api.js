@@ -18,8 +18,7 @@ export default class {
                     )
                 );
             });
-        } catch (err) {
-            
+        } catch (err) {            
             return res
                 .status(500)
                 .send('Something went wrong!');

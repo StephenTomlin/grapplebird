@@ -1,6 +1,9 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
+    output: {
+        globalObject: 'this'
+    },
     module: {
         rules: [
             {
@@ -42,5 +45,6 @@ module.exports = {
             template: "./public/index.html",
             filename: "./build/index.html"
         })
+        
     ]
 }

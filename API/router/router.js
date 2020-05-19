@@ -1,7 +1,6 @@
 'use strict';
-import { router } from '../server.js';
+import express from 'express';
 import api from './api.js';
 
-router.get('/', api.basicAPICall);
-
-export default router;
+export default express.Router()
+    .get('/', api.basicAPICall);
