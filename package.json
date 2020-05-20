@@ -15,7 +15,9 @@
     "morgan": "^1.10.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1"
+    "react-scripts": "3.4.1",
+    "react-unity-webgl": "^7.1.10",
+    "window-or-global": "^1.0.1"
   },
   "scripts": {
     "start": "echo Process running on port 8080 && node -r dotenv/config ./API/index.js",
@@ -43,6 +45,7 @@
     "@babel/preset-react": "^7.9.4",
     "babel-loader": "^8.1.0",
     "css-loader": "^3.5.3",
+    "file-loader": "^6.0.0",
     "html-loader": "^1.1.0",
     "html-webpack-plugin": "^4.3.0",
     "svg-inline-loader": "^0.8.2",

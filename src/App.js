@@ -1,6 +1,5 @@
 import React from 'react';
 import './App.css';
-import './Components/UI/GameContainer.js'
 import GameContainer from './Components/UI/GameContainer.js';
 
 function App() {

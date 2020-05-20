@@ -37,6 +37,14 @@ module.exports = {
             {
                 test: /\.svg$/,
                 loader: 'svg-inline-loader'
+            }, 
+            {
+                test: /\.(png|jpe?g|gif)$/i,
+                use: [
+                    {
+                        loader: 'file-loader',
+                    },
+                ],
             }
         ]
     },
@@ -44,7 +52,6 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: "./public/index.html",
             filename: "./build/index.html"
-        })
-        
+        }),
     ]
 }
