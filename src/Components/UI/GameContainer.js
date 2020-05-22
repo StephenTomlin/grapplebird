@@ -24,12 +24,7 @@ export  default class GameContainer extends React.Component  {
                 UnityLoader.instantiate("gameContainer", '..Game/Build/Game.json', {onProgress: unityProgress })  
             : 
                 null
-        return (
-                <>
-                    <div id="gameContainer" style={{ width: 960,  height: 600 }}></div>
-                </>
-
-        )
+        return (<div id="gameContainer" style={{ width: 960,  height: 600 }}></div>)
     }
 }
 
