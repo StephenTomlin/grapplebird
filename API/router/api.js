@@ -14,7 +14,7 @@ export default class {
                 return res.send(
                     data.replace(
                         '<div id="root"></div>', 
-                        `<div id="root">${ReactDOMServer.renderToNodeStream(<App />)}</div>`
+                        `<div id="root">${ReactDOMServer.renderToString(<App />)}</div>`
                     )
                 );
             });

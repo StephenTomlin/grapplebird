@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "@babel/register": "^7.9.0",
+    "@babel/runtime": "^7.9.6",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
@@ -20,7 +21,7 @@
     "window-or-global": "^1.0.1"
   },
   "scripts": {
-    "start": "echo Process running on port 8080 && node -r dotenv/config ./API/index.js",
+    "start": "echo Process running on port 8080 && node -r dotenv/config dis/main.js",
     "build": "webpack --mode production"
   },
   "eslintConfig": {
@@ -41,6 +42,7 @@
   "devDependencies": {
     "@babel/core": "^7.9.6",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/plugin-transform-runtime": "^7.9.6",
     "@babel/preset-env": "^7.9.6",
     "@babel/preset-react": "^7.9.4",
     "babel-loader": "^8.1.0",
