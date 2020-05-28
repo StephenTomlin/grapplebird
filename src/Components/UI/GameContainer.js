@@ -1,5 +1,7 @@
 "use strict";
 import React from 'react';
+import unityLoader from '../Game/Build/UnityLoader';
+import UnityProgress from '../Game/TemplateData/UnityProgress';
 
 export  default class GameContainer extends React.Component  {
     constructor(props){
@@ -13,14 +15,11 @@ export  default class GameContainer extends React.Component  {
     }
 
     async componentDidMount() {
-        const isClient = typeof window !== 'undefined';
-        if(isClient) {
-            this.setState({ 
-                gameInstance: UnityLoader
-                    .instantiate("gameContainer", "Build/Game.json", 
-                    { onProgress: UnityProgress })
-            })
-        }
+        this.setState({ 
+            gameInstance: UnityLoader
+                .instantiate("gameContainer", "Build/Game.json", 
+                { onProgress: UnityProgress })
+        })
     }
 
   
