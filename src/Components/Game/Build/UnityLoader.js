@@ -1,4 +1,6 @@
-var UnityLoader = UnityLoader || {
+console.log("Running client check in unityLoader")
+
+var UnityLoader = typeof window == 'undefined' ? {} : {
   Compression: {
     identity: {
       require: function () {
@@ -14,7 +16,7 @@ var UnityLoader = UnityLoader || {
         if (!this.exports)
           this.exports = this.require("inflate.js");
         try { return this.exports.inflate(data) } catch (e) {};
-        
+
       },
       hasUnityMarker: function (data) {
         var commentOffset = 10, expectedComment = "UnityWeb Compressed Content (gzip)";
@@ -36,7 +38,7 @@ var UnityLoader = UnityLoader || {
           commentOffset++;
         }
         return (flags & 0x10) && String.fromCharCode.apply(null, data.subarray(commentOffset, commentOffset + expectedComment.length + 1)) == expectedComment + "\0";
-        
+
       },
     },
     brotli: {
@@ -46,7 +48,7 @@ var UnityLoader = UnityLoader || {
         if (!this.exports)
           this.exports = this.require("decompress.js");
         try { return this.exports(data) } catch (e) {};
-        
+
       },
       hasUnityMarker: function (data) {
         var expectedComment = "UnityWeb Compressed Content (brotli)";
@@ -54,7 +56,7 @@ var UnityLoader = UnityLoader || {
           return false;
         var WBITS_length = (data[0] & 0x01) ? (data[0] & 0x0E) ? 4 : 7 : 1,
             WBITS = data[0] & ((1 << WBITS_length) - 1),
-            MSKIPBYTES = 1 + ((Math.log(expectedComment.length - 1) / Math.log(2)) >> 3);
+            MSKIPBYTES = 1 + ((Math.log(expectedComment.length - 1) / Math.log(2)) >> 3),
             commentOffset = (WBITS_length + 1 + 2 + 1 + 2 + (MSKIPBYTES << 3) + 7) >> 3;
         if (WBITS == 0x11 || commentOffset > data.length)
           return false;
@@ -64,7 +66,7 @@ var UnityLoader = UnityLoader || {
             return false;
         }
         return String.fromCharCode.apply(null, data.subarray(commentOffset, commentOffset + expectedComment.length)) == expectedComment;
-        
+
       },
     },
     decompress: function (compressed, callback) {
@@ -97,7 +99,7 @@ var UnityLoader = UnityLoader || {
       decompressor.worker.postMessage({id: id, compressed: compressed}, [compressed.buffer]);
     },
     serverSetupWarningEnabled: true,
-  },  
+  },
   Cryptography: {
     crc32: function (code) {
       var module = UnityLoader.Cryptography.crc32.module;
@@ -117,7 +119,7 @@ var UnityLoader = UnityLoader || {
           }
           return {process: process};
         })({Uint8Array: Uint8Array, Uint32Array: Uint32Array}, null, buffer);
-        
+
         module = UnityLoader.Cryptography.crc32.module = {
           buffer: buffer,
           HEAPU8: new Uint8Array(buffer),
@@ -133,7 +135,7 @@ var UnityLoader = UnityLoader || {
           module.HEAPU32[i] = a;
         }
       }
-      
+
       module.HEAPU32[module.crc32 >> 2] = 0;
       for (var offset = 0; offset < code.length;) {
         var length = Math.min(module.HEAPU8.length - module.data, code.length - offset);
@@ -184,7 +186,7 @@ var UnityLoader = UnityLoader || {
           md5: 0x200,
           data: 0x240,
         };
-        
+
         module.HEAPU32.set(new Uint32Array([
           0x00000007, 0xD76AA478, 0x0001000C, 0xE8C7B756, 0x00020011, 0x242070DB, 0x00030016, 0xC1BDCEEE,
           0x00040007, 0xF57C0FAF, 0x0005000C, 0x4787C62A, 0x00060011, 0xA8304613, 0x00070016, 0xFD469501,
@@ -204,7 +206,7 @@ var UnityLoader = UnityLoader || {
           0x00040006, 0xF7537E82, 0x000B000A, 0xBD3AF235, 0x0002000F, 0x2AD7D2BB, 0x00090015, 0xEB86D391,
         ]));
       }
-      
+
       module.HEAPU32.set(new Uint32Array([0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476]), module.md5 >> 2);
       for (var offset = 0; offset < code.length;) {
         var length = Math.min(module.HEAPU8.length - module.data, code.length - offset) & ~63;
@@ -245,7 +247,7 @@ var UnityLoader = UnityLoader || {
             var h0 = 0, h1 = 0, h2 = 0, h3 = 0, h4 = 0, d0 = 0, d1 = 0, d2 = 0, d3 = 0, d4 = 0, t = 0, i = 0;
             h0 = HEAPU32[80] | 0, h1 = HEAPU32[81] | 0, h2 = HEAPU32[82] | 0, h3 = HEAPU32[83] | 0, h4 = HEAPU32[84] | 0;
             for (; blockCount; data = (data + 64) | 0, blockCount = (blockCount - 1) | 0) {
-              d0 = h0; d1 = h1; d2 = h2; d3 = h3; d4 = h4;            
+              d0 = h0; d1 = h1; d2 = h2; d3 = h3; d4 = h4;
               for (i = 0; (i | 0) < 320; i = (i + 4) | 0, h4 = h3, h3 = h2, h2 = (h1 << 30) | (h1 >>> 2), h1 = h0, h0 = t) {
                 if ((i | 0) < 64) {
                   t = (HEAPU32[(data + i) >> 2] | 0);
@@ -261,14 +263,14 @@ var UnityLoader = UnityLoader || {
                   (i | 0) < 240 ? (((h1 & h2) | (h1 & h3) | (h2 & h3)) + 0x8F1BBCDC) | 0 :
                   ((h1 ^ h2 ^ h3) + 0xCA62C1D6) | 0
                 )) | 0;
-              }            
+              }
               h0 = (h0 + d0) | 0; h1 = (h1 + d1) | 0; h2 = (h2 + d2) | 0; h3 = (h3 + d3) | 0; h4 = (h4 + d4) | 0;
             }
             HEAPU32[80] = h0; HEAPU32[81] = h1; HEAPU32[82] = h2; HEAPU32[83] = h3; HEAPU32[84] = h4;
           }
           return {process: process};
         })({Uint32Array:Uint32Array}, null, buffer);
-        
+
         module = UnityLoader.Cryptography.sha1.module = {
           buffer: buffer,
           HEAPU8: new Uint8Array(buffer),
@@ -278,7 +280,7 @@ var UnityLoader = UnityLoader || {
           data: 0x180,
         };
       }
-      
+
       module.HEAPU32.set(new Uint32Array([0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0]), module.sha1 >> 2);
       for (var offset = 0; offset < code.length;) {
         var length = Math.min(module.HEAPU8.length - module.data, code.length - offset) & ~63;
@@ -305,11 +307,11 @@ var UnityLoader = UnityLoader || {
       }
       var sha1 = new Uint8Array(20);
       for (var i = 0; i < sha1.length; i++)
-        sha1[i] = module.HEAPU8[module.sha1 + (i & ~3) + 3 - (i & 3)];    
+        sha1[i] = module.HEAPU8[module.sha1 + (i & ~3) + 3 - (i & 3)];
       return sha1;
 
     },
-  
+
   },
   Error: {
     // stacktrace example:
@@ -367,14 +369,14 @@ var UnityLoader = UnityLoader || {
             Module.demangleSymbol = UnityLoader[id]();
             UnityLoader.Error.handler(e, Module);
           });
-        };        
+        };
         xhr.send();
       });
       return true;
     })(),
-    stackTraceFormat: navigator.userAgent.indexOf("Chrome") != -1 ? "(\\s+at\\s+)(([\\w\\d_\\.]*?)([\\w\\d_$]+)(/[\\w\\d_\\./]+|))(\\s+\\[.*\\]|)\\s*\\((blob:.*)\\)" : 
+    stackTraceFormat: navigator.userAgent.indexOf("Chrome") != -1 ? "(\\s+at\\s+)(([\\w\\d_\\.]*?)([\\w\\d_$]+)(/[\\w\\d_\\./]+|))(\\s+\\[.*\\]|)\\s*\\((blob:.*)\\)" :
                                                                     "(\\s*)(([\\w\\d_\\.]*?)([\\w\\d_$]+)(/[\\w\\d_\\./]+|))(\\s+\\[.*\\]|)\\s*@(blob:.*)",
-    stackTraceFormatWasm: navigator.userAgent.indexOf("Chrome") != -1 ? "((\\s+at\\s*)\\s\\(<WASM>\\[(\\d+)\\]\\+\\d+\\))()" : 
+    stackTraceFormatWasm: navigator.userAgent.indexOf("Chrome") != -1 ? "((\\s+at\\s*)\\s\\(<WASM>\\[(\\d+)\\]\\+\\d+\\))()" :
                                                                         "((\\s*)wasm-function\\[(\\d+)\\])@(blob:.*)",
     blobParseRegExp: new RegExp("^(blob:.*)(:\\d+:\\d+)$"),
     getModule: function (e) {
@@ -435,14 +437,14 @@ var UnityLoader = UnityLoader || {
       }
       alert(message);
       this.didShowErrorMessage = true;
-      
+
     },
     popup: function (gameInstance, message, callbacks) {
       callbacks = callbacks || [{text: "OK"}];
       var popup = document.createElement("div");
       popup.style.cssText = "position: absolute; top: 50%; left: 50%; -webkit-transform: translate(-50%, -50%); transform: translate(-50%, -50%); text-align: center; border: 1px solid black; padding: 5px; background: #E8E8E8";
       var messageElement = document.createElement("span");
-      messageElement.textContent  = message;      
+      messageElement.textContent  = message;
       popup.appendChild(messageElement);
       popup.appendChild(document.createElement("br"));
       for (var i = 0; i < callbacks.length; i++) {
@@ -456,9 +458,9 @@ var UnityLoader = UnityLoader || {
         popup.appendChild(button);
       }
       gameInstance.container.appendChild(popup);
-      
+
     },
-    
+
   },
   Job: {
     schedule: function (Module, id, dependencies, callback, parameters) {
@@ -535,14 +537,14 @@ var UnityLoader = UnityLoader || {
       var style = UnityLoader.Progress.Styles[gameInstance.Module.splashScreenStyle];
       var progressLogoUrl = gameInstance.Module.progressLogoUrl ? gameInstance.Module.resolveBuildUrl(gameInstance.Module.progressLogoUrl) : style.progressLogoUrl;
       var progressEmptyUrl = gameInstance.Module.progressEmptyUrl ? gameInstance.Module.resolveBuildUrl(gameInstance.Module.progressEmptyUrl) : style.progressEmptyUrl;
-      var progressFullUrl = gameInstance.Module.progressFullUrl ? gameInstance.Module.resolveBuildUrl(gameInstance.Module.progressFullUrl) : style.progressFullUrl;      
+      var progressFullUrl = gameInstance.Module.progressFullUrl ? gameInstance.Module.resolveBuildUrl(gameInstance.Module.progressFullUrl) : style.progressFullUrl;
       var commonStyle = "position: absolute; left: 50%; top: 50%; -webkit-transform: translate(-50%, -50%); transform: translate(-50%, -50%);";
       if (!gameInstance.logo) {
         gameInstance.logo = document.createElement("div");
         gameInstance.logo.style.cssText = commonStyle + "background: url('" + progressLogoUrl + "') no-repeat center / contain; width: 154px; height: 130px;";
         gameInstance.container.appendChild(gameInstance.logo);
       }
-      if (!gameInstance.progress) {        
+      if (!gameInstance.progress) {
         gameInstance.progress = document.createElement("div");
         gameInstance.progress.style.cssText = commonStyle + " height: 18px; width: 141px; margin-top: 90px;";
         gameInstance.progress.empty = document.createElement("div");
@@ -680,7 +682,7 @@ var UnityLoader = UnityLoader || {
       {s: "Mac OS X", r: /Mac OS X/},
       {s: "Mac OS", r: /(MacPPC|MacIntel|Mac_PowerPC|Macintosh)/},
       {s: "QNX", r: /QNX/},
-      {s: "UNIX", r: /UNIX/}, 
+      {s: "UNIX", r: /UNIX/},
       {s: "BeOS", r: /BeOS/},
       {s: "OS/2", r: /OS\/2/},
       {s: "Search Bot", r: /(nuhk|Googlebot|Yammybot|Openbot|Slurp|MSNBot|Ask Jeeves\/Teoma|ia_archiver)/}
@@ -781,7 +783,7 @@ var UnityLoader = UnityLoader || {
     } else {
       onsuccess();
     }
-    
+
   },
   Blobs: {},
   loadCode: function (code, onload, info) {
@@ -814,12 +816,12 @@ var UnityLoader = UnityLoader || {
     } catch (e) {
       setupIndexedDB();
     }
-    
+
   },
   processWasmCodeJob: function (Module, job) {
     Module.wasmBinary = UnityLoader.Job.result(Module, "downloadWasmCode");
     job.complete();
-    
+
   },
   processWasmFrameworkJob: function (Module, job) {
     var code = UnityLoader.Job.result(Module, "downloadWasmFramework");
@@ -829,7 +831,7 @@ var UnityLoader = UnityLoader || {
       UnityLoader[id](Module);
       job.complete();
     }, {Module: Module, url: Module["wasmFrameworkUrl"]});
-    
+
   },
   processAsmCodeJob: function (Module, job) {
     var asm = UnityLoader.Job.result(Module, "downloadAsmCode");
@@ -837,7 +839,7 @@ var UnityLoader = UnityLoader || {
       Module.asm = UnityLoader[id];
       job.complete();
     }, {Module: Module, url: Module["asmCodeUrl"]});
-    
+
   },
   processAsmFrameworkJob: function (Module, job) {
     var code = UnityLoader.Job.result(Module, "downloadAsmFramework");
@@ -847,7 +849,7 @@ var UnityLoader = UnityLoader || {
       UnityLoader[id](Module);
       job.complete();
     }, {Module: Module, url: Module["asmFrameworkUrl"]});
-    
+
   },
   processMemoryInitializerJob: function (Module, job) {
     Module["memoryInitializerRequest"].status = 200;
@@ -855,7 +857,7 @@ var UnityLoader = UnityLoader || {
     if (Module["memoryInitializerRequest"].callback)
       Module["memoryInitializerRequest"].callback();
     job.complete();
-    
+
   },
   processDataJob: function (Module, job) {
     var data = UnityLoader.Job.result(Module, "downloadData");
@@ -889,7 +891,7 @@ var UnityLoader = UnityLoader || {
     if (job.parameters.onload)
       xhr.addEventListener("load", job.parameters.onload);
     xhr.send();
-    
+
   },
   scheduleBuildDownloadJob: function (Module, jobId, urlId) {
     UnityLoader.Progress.update(Module, jobId);
@@ -903,11 +905,11 @@ var UnityLoader = UnityLoader || {
         cacheControl: Module.cacheControl[urlId] || Module.cacheControl["default"],
       } : null,
     });
-    
+
   },
   loadModule: function (Module) {
     Module.useWasm = Module["wasmCodeUrl"] && UnityLoader.SystemInfo.hasWasm;
-    
+
     if (Module.useWasm) {
       UnityLoader.scheduleBuildDownloadJob(Module, "downloadWasmCode", "wasmCodeUrl");
       UnityLoader.Job.schedule(Module, "processWasmCode", ["downloadWasmCode"], UnityLoader.processWasmCodeJob);
@@ -915,7 +917,7 @@ var UnityLoader = UnityLoader || {
       {
         UnityLoader.scheduleBuildDownloadJob(Module, "downloadMemoryInitializer", "wasmMemoryUrl");
         UnityLoader.Job.schedule(Module, "processMemoryInitializer", ["downloadMemoryInitializer"], UnityLoader.processMemoryInitializerJob);
-        Module["memoryInitializerRequest"] = { addEventListener: function (type, callback) { Module["memoryInitializerRequest"].callback = callback; } }        
+        Module["memoryInitializerRequest"] = { addEventListener: function (type, callback) { Module["memoryInitializerRequest"].callback = callback; } }
       }
       UnityLoader.scheduleBuildDownloadJob(Module, "downloadWasmFramework", "wasmFrameworkUrl");
       UnityLoader.Job.schedule(Module, "processWasmFramework", ["downloadWasmFramework", "processWasmCode", "setupIndexedDB"], UnityLoader.processWasmFrameworkJob);
@@ -937,12 +939,12 @@ var UnityLoader = UnityLoader || {
 
     UnityLoader.scheduleBuildDownloadJob(Module, "downloadData", "dataUrl");
     UnityLoader.Job.schedule(Module, "setupIndexedDB", [], UnityLoader.setupIndexedDBJob);
-        
+
     Module["preRun"].push(function () {
       Module["addRunDependency"]("processDataJob");
       UnityLoader.Job.schedule(Module, "processData", ["downloadData"], UnityLoader.processDataJob);
     });
-    
+
   },
   instantiate: function (container, url, parameters) {
     function instantiate(container, gameInstance) {
@@ -974,7 +976,7 @@ var UnityLoader = UnityLoader || {
           Module.print("Could not download " + gameInstance.url);
           if (document.URL.indexOf("file:") == 0) {
             alert ("It seems your browser does not support running Unity WebGL content from file:// urls. Please upload it to an http server, or try a different browser.");
-          }   
+          }
         }
         xhr.onload = function () {
           var parameters = JSON.parse(xhr.responseText);
@@ -1012,10 +1014,10 @@ var UnityLoader = UnityLoader || {
       }, function () {
         Module.printErr("Instantiation of the '" + url + "' terminated due to the failed compatibility check.");
       });
-      
+
       return true;
     }
-    
+
     function resolveURL(url) {
       resolveURL.link = resolveURL.link || document.createElement("a");
       resolveURL.link.href = url;
@@ -1075,7 +1077,7 @@ var UnityLoader = UnityLoader || {
 
     if (!instantiate(container, gameInstance))
       document.addEventListener("DOMContentLoaded", function () { instantiate(container, gameInstance) });
-    
+
     return gameInstance;
 
   },
@@ -1083,7 +1085,7 @@ var UnityLoader = UnityLoader || {
     assert: function (condition, text) {
       if (!condition)
         abort("Assertion failed: " + text);
-      
+
     },
     optimizeMathFround: function (code, embeddedAsm) {
       console.log("optimizing out Math.fround calls");
@@ -1100,12 +1102,12 @@ var UnityLoader = UnityLoader || {
       ];
       var froundPrefix = "var";
       var froundMarker = "global.Math.fround;";
-      
+
       var position = 0;
       var state = embeddedAsm ? State.LOOKING_FOR_MODULE : State.SCANNING_MODULE_VARIABLES;
       var froundLast = 0;
       var froundLength = 0;
-          
+
       for(; state <= State.SCANNING_MODULE_FUNCTIONS && position < code.length; position++) {
         if (code[position] == 0x2F && code[position + 1] == 0x2F && code[position + 2] == 0x20 &&
             String.fromCharCode.apply(null, code.subarray(position + 3, position + 3 + stateSwitchMarker[state].length)) === stateSwitchMarker[state]) {
@@ -1132,7 +1134,7 @@ var UnityLoader = UnityLoader || {
                 code[position - nameLength] = 0x20; // fill the Math_fround name with spaces (replacement works faster than shifting back the rest of the code)
             }
           }
-        }            
+        }
       }
       return code;
 
@@ -1143,17 +1145,17 @@ var UnityLoader = UnityLoader || {
     var UnityCacheDatabase = { name: "UnityCache", version: 2 };
     var XMLHttpRequestStore = { name: "XMLHttpRequest", version: 1 };
     var WebAssemblyStore = { name: "WebAssembly", version: 1 };
-    
+
     function log(message) {
       console.log("[UnityCache] " + message);
     }
-    
+
     function resolveURL(url) {
       resolveURL.link = resolveURL.link || document.createElement("a");
       resolveURL.link.href = url;
       return resolveURL.link.href;
     }
-    
+
     function isCrossOriginURL(url) {
       var originMatch = window.location.href.match(/^[a-z]+:\/\/[^\/]+/);
       return !originMatch || url.lastIndexOf(originMatch[0], 0);
@@ -1178,7 +1180,7 @@ var UnityLoader = UnityLoader || {
           }
         }
       }
-      
+
       try {
         var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
         function upgradeDatabase() {
@@ -1210,7 +1212,7 @@ var UnityLoader = UnityLoader || {
         initDatabase(null);
       }
     };
-    
+
     UnityCache.prototype.execute = function (store, operation, parameters, onsuccess, onerror) {
       if (this.database) {
         try {
@@ -1233,9 +1235,9 @@ var UnityLoader = UnityLoader || {
         onerror(new Error("indexedDB access denied"));
       }
     };
-    
+
     var unityCache = new UnityCache();
-    
+
     function createXMLHttpRequestResult(url, company, product, timestamp, xhr) {
       var result = { url: url, version: XMLHttpRequestStore.version, company: company, product: product, updated: timestamp, revalidated: timestamp, accessed: timestamp, responseHeaders: {}, xhr: {} };
       if (xhr) {
@@ -1275,7 +1277,7 @@ var UnityLoader = UnityLoader || {
         }
       }.bind(this));
     };
-    
+
     CachedXMLHttpRequest.prototype.send = function (data) {
       var xhr = this.xhr, cache = this.cache;
       var sendArguments = arguments;
@@ -1325,7 +1327,7 @@ var UnityLoader = UnityLoader || {
         xhr.send.apply(xhr, sendArguments);
       });
     };
-    
+
     CachedXMLHttpRequest.prototype.open = function (method, url, async, user, password) {
       this.cache.result = createXMLHttpRequestResult(resolveURL(url), this.cache.company, this.cache.product, Date.now());
       this.cache.enabled = ["must-revalidate", "immutable"].indexOf(this.cache.control) != -1 && method == "GET" && this.cache.result.url.match("^https?:\/\/")
@@ -1333,12 +1335,12 @@ var UnityLoader = UnityLoader || {
       this.cache.revalidated = false;
       return this.xhr.open.apply(this.xhr, arguments);
     };
-    
+
     CachedXMLHttpRequest.prototype.setRequestHeader = function (header, value) {
       this.cache.enabled = false;
       return this.xhr.setRequestHeader.apply(this.xhr, arguments);
     };
-    
+
     var xhr = new XMLHttpRequest();
     for (var property in xhr) {
       if (!CachedXMLHttpRequest.prototype.hasOwnProperty(property)) {
@@ -1352,7 +1354,7 @@ var UnityLoader = UnityLoader || {
         })(property);
       }
     }
-    
+
     return {
       XMLHttpRequest: CachedXMLHttpRequest,
       WebAssembly: {
@@ -1372,3 +1374,4 @@ var UnityLoader = UnityLoader || {
   } (),
 
 };
+export default UnityLoader
