@@ -23,7 +23,7 @@
   },
   "scripts": {
     "start": "echo Process running on port 8080 && node -r dotenv/config ./API/index.js",
-    "build": "webpack --mode production"
+    "build": "webpack --mode development"
   },
   "eslintConfig": {
     "extends": "react-app"

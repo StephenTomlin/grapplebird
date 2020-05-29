@@ -1,8 +1,6 @@
 import React from 'react';
 import './App.css';
 import GameContainer from './Components/UI/GameContainer.js';
-import window from 'global/window';
-
 function App() {
   return (
     <div className="App">
